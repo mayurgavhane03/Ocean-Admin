@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { JoinTelegram } from "../constant";
+import React, { useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { JoinTelegram } from '../constant';
+import { fetchMovieById } from '../store/movieSlice';
 
 const MovieDetail = () => {
   const { id } = useParams();
-  const [movie, setMovie] = useState(null);
+  const dispatch = useDispatch();
+  const movie = useSelector((state) => state.movies.movieDetails);
+  const movieStatus = useSelector((state) => state.movies.movieDetailsStatus);
+  const error = useSelector((state) => state.movies.movieDetailsError);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/movies/movies/${id}`)
-      .then((response) => response.json())
-      .then((data) => setMovie(data))
-      .catch((error) => console.error("Error fetching data:", error));
-  }, [id]);
+    if (movieStatus === 'idle' || (movie && movie._id !== id)) {
+      dispatch(fetchMovieById(id));
+    }
+  }, [id, movieStatus, movie, dispatch]);
 
-  if (!movie) {
+  if (movieStatus === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
         Loading...
@@ -21,7 +26,18 @@ const MovieDetail = () => {
     );
   }
 
-  // Function to check if all URLs are available
+  if (movieStatus === 'failed') {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        {error}
+      </div>
+    );
+  }
+
+  if (!movie) {
+    return null;
+  }
+
   const areAllUrlsAvailable = () => {
     for (const quality in movie.allInOne) {
       if (!movie.allInOne[quality].url) {
@@ -95,14 +111,13 @@ const MovieDetail = () => {
             )}
             {Object.entries(movie.allInOne).map(([quality, info]) => (
               <div key={quality} className="mb-2 text-2xl flex font-serif  justify-center items-center">
-                {/* <h1 className="text-white">{quality.toUpperCase()}</h1> */}
                 <Link
                   to={{ pathname: info.url }}
                   className="text-blue-400 ml-4"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                 {movie.type=== 'series' ?  "Pack":"Download Full MOvie"}   {quality.toUpperCase()} Links 
+                  {movie.type === 'series' ? "Pack" : "Download Full Movie"} {quality.toUpperCase()} Links
                 </Link>
                 <span className="text-white ml-2 ">[{info.size}]</span>
               </div>
@@ -114,9 +129,8 @@ const MovieDetail = () => {
             <h2 className="text-red-500 font-semibold text-2xl">Episodes</h2>
             {movie.episodes.map((episode, index) => (
               <div key={index} className="mt-4">
-               
                 <div className="flex  justify-center items-center ">
-                <h3 className="text-xl font-bold text-[#ff9900] ">{episode.title}: </h3>
+                  <h3 className="text-xl font-bold text-[#ff9900] ">{episode.title}: </h3>
                   {Object.entries(episode.qualities).map(([quality, url]) => (
                     <Link
                       key={quality}

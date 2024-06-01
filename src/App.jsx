@@ -3,7 +3,6 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import MainPage from './Components/MainPage';
 import MovieDetail from './Components/MovieDetail';
 import MovieForm from './Components/MovieForm';
-
 import Header from './Components/Header';
 
 const AppLayout = () => {
@@ -25,7 +24,7 @@ const router = createBrowserRouter([
         element: <MainPage />,
       },
       {
-        path: 'Admin',
+        path: 'admin',
         element: <MovieForm />,
       },
       {
