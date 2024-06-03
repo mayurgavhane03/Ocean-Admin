@@ -3,7 +3,7 @@ import CryptoJS from 'crypto-js';
 import { sortMoviesByDate } from '../helpers/sortMovieByDate';
 
 // Secret key for encryption/decryption
-const secretKey = 'your-secret-key';
+const secretKey = 'MNMN0808';
 
 // Encrypt data before sending it to the server
 const encryptData = (data) => {
@@ -43,8 +43,12 @@ export const fetchMoviesByTitle = createAsyncThunk('movies/fetchMoviesByTitle', 
   return sortMoviesByDate(filteredMovies);
 });
 
-
-
+export const fetchMoviesByType = createAsyncThunk('movies/fetchMoviesByType', async (type) => {
+  const response = await fetch(`http://localhost:5000/api/movies/type/${type}`);
+  const encryptedData = await response.json();
+  const data = decryptData(encryptedData.data);
+  return sortMoviesByDate(data);
+});
 
 const moviesSlice = createSlice({
   name: 'movies',
@@ -134,6 +138,17 @@ const moviesSlice = createSlice({
       .addCase(fetchMoviesByTitle.rejected, (state, action) => {
         state.searchStatus = 'failed';
         state.searchError = action.error.message;
+      })
+      .addCase(fetchMoviesByType.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchMoviesByType.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = action.payload;
+      })
+      .addCase(fetchMoviesByType.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
   },
 });
