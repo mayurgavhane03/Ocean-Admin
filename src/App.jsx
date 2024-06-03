@@ -1,9 +1,9 @@
-import React from 'react';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import MainPage from './Components/MainPage';
-import MovieDetail from './Components/MovieDetail';
-import MovieForm from './Components/MovieForm';
-import Header from './Components/Header';
+import React from "react";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import MainPage from "./Components/MainPage";
+import MovieDetail from "./Components/MovieDetail";
+import MovieForm from "./Components/MovieForm";
+import Header from "./Components/Header";
 
 const AppLayout = () => {
   return (
@@ -16,31 +16,32 @@ const AppLayout = () => {
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <AppLayout />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <MainPage />,
       },
       {
-        path: 'admin',
+        path: "admin",
         element: <MovieForm />,
       },
       {
-        path: 'movie/:id',
-        element: <MovieDetail />
-      }
-    ]
+        path: "movie/:id",
+        element: <MovieDetail />,
+      },
+    ],
   },
 ]);
 
 const App = () => {
   return (
-    <div className='h-full bg-gray-900'>
-      <RouterProvider router={router} />
+    <div className="h-auto">
+
+<RouterProvider router={router} />;
     </div>
-  );
+  )
 };
 
 export default App;
