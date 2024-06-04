@@ -38,10 +38,9 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <div className="h-auto">
-
-<RouterProvider router={router} />;
+      <RouterProvider router={router} />;
     </div>
-  )
+  );
 };
 
 export default App;

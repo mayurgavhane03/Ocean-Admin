@@ -38,18 +38,13 @@ const MovieDetail = () => {
   }
 
   const areAllUrlsAvailable = () => {
-    for (const quality in movie.allInOne) {
-      if (!movie.allInOne[quality].url) {
-        return false;
-      }
-    }
-    return true;
+    return Object.values(movie.allInOne).every((info) => info.url);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-6">
       <div className="text-center max-w-2xl">
-        <h1 className="text-3xl  text-white    text-[24px] font-bold mb-10">
+        <h1 className="text-3xl text-white text-[24px] font-bold mb-10">
           {movie.title}
         </h1>
         <img
@@ -63,7 +58,7 @@ const MovieDetail = () => {
           </Link>
         </div>
         <div className="text-white">
-          <p className="mb-2 font-bold text-blue-500 text-2xl ">
+          <p className="mb-2 font-bold text-blue-500 text-2xl">
             IMDb Rating: {movie.imdbRating}
           </p>
           <p className="mb-2 font-bold">
@@ -99,19 +94,18 @@ const MovieDetail = () => {
             ))}
           </div>
         </div>
-        <div className="mt-8">
+        <div className="mt-12">
           <h1 className="text-red-500 font-serif font-semibold text-3xl">
             DOWNLOAD LINKS
           </h1>
         </div>
         <div className="mt-4">
-          {/* <p className="mb-2 text-white font-bold">All Qualities</p> */}
           <div className="flex flex-col">
             {areAllUrlsAvailable() && (
-              <div className="mb-2  flex justify-center items-center">
+              <div className="mb-2 flex justify-center items-center border-b border-white">
                 <a
                   href={movie.allInOne.url}
-                  className="text-blue-400 ]   text-white text-xl ml-4"
+                  className="text-blue-400 text-xl ml-4"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -119,23 +113,25 @@ const MovieDetail = () => {
                 </a>
               </div>
             )}
-            {Object.entries(movie.allInOne).map(([quality, info]) => (
-              <div
-                key={quality}
-                className="mb-2 text-2xl flex font-serif justify-center items-center"
-              >
-                <a
-                  href={info.url}
-                  className="text-blue-400 text-xl mt-2  ml-4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {/* {movie.type === "series" ? "Pack" : `${quality}`}{" "} */}
-                  {quality.toUpperCase()} Link
-                  <span className=" ml-2">[{info.size}]</span>
-                </a>
-              </div>
-            ))}
+            {Object.entries(movie.allInOne).map(
+              ([quality, info]) =>
+                info.url && (
+                  <div
+                    key={quality}
+                    className="mb-2 text-2xl flex font-serif justify-center items-center border-b border-white"
+                  >
+                    <a
+                      href={info.url}
+                      className="text-blue-400 text-xl mb-3 mt-2 ml-4"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {quality.toUpperCase()} Link
+                      <span className="ml-2">[{info.size}]</span>
+                    </a>
+                  </div>
+                )
+            )}
 
             <Link to="/">
               <h1 className="text-3xl text-blue-400 font-bold mt-10 mb-10">
@@ -148,8 +144,15 @@ const MovieDetail = () => {
           <div className="mt-8">
             <h2 className="text-red-500 font-semibold text-2xl">Episodes</h2>
             {movie.episodes.map((episode, index) => (
-              <div key={index} className="mt-4">
-                <div className="flex justify-center items-center">
+              <div
+                key={index}
+                className={`mt-4 ${
+                  index === movie.episodes.length - 1
+                    ? "border-t border-white pt-4"
+                    : "border-t border-white pt-4"
+                }`}
+              >
+                <div className="flex justify-center items-center mb-4">
                   <h3 className="text-xl font-bold text-[#ff9900]">
                     {episode.title}:{" "}
                   </h3>
@@ -157,23 +160,23 @@ const MovieDetail = () => {
                     <a
                       key={quality}
                       href={url}
-                      className="text-blue-400  ml-3 font-bold"
+                      className="text-blue-400 ml-3 font-bold "
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {quality.toUpperCase()}{" "}
-                      {/* <span className="text-red-500 ml-3 sm:block font-extrabold">
-                        ||
-                      </span> */}
+                      {quality.toUpperCase()}
                     </a>
                   ))}
                 </div>
+                {index === movie.episodes.length - 1 && (
+                  <div className="mb-2 text-2xl flex font-serif justify-center items-center border-b border-white" />
+                )}
               </div>
             ))}
           </div>
         )}
 
-        <h1 className="text-3xl mt-10 text-white  mb-10">
+        <h1 className="text-3xl mt-10 text-white mb-10 decoration-from-font  "><span className="  text-red-600 font-bold font-serif text-2xl "> DESCRIPTION  : </span>
           {movie.title} Available only on OceanOfMovie The Best Movie Site
         </h1>
       </div>

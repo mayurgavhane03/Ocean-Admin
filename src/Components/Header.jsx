@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { Link } from "react-router-dom";
 import { LuSearch } from "react-icons/lu";
 import { fetchMoviesByGenre, fetchMoviesByType, setGenre } from "../store/movieSlice";
@@ -8,24 +9,17 @@ import { FaBars } from "react-icons/fa";
 
 import Search from "./Search";
 
-
-const DropdownMenu = ({ label, items, onItemClick }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
+const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
   const handleItemClick = (item) => {
     onItemClick(item.toLowerCase());
-    setIsOpen(false); 
+    onToggle(false);
   };
 
   return (
     <div className="relative sm:ml-36">
       <div className="flex justify-center items-center">
         <button
-          onClick={toggleDropdown}
+          onClick={() => onToggle(!isOpen)}
           className="peer text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center"
         >
           {label} <FaChevronDown className={`ml-2 transform ${isOpen ? 'rotate-180' : 'rotate-0'}`} />
@@ -35,7 +29,7 @@ const DropdownMenu = ({ label, items, onItemClick }) => {
         <div
           className="absolute sm:mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 z-10"
           style={{ top: '100%', right: '0', left: 'auto' }}
-          onMouseLeave={() => setIsOpen(false)}
+          onMouseLeave={() => onToggle(false)}
         >
           <div
             className="py-1"
@@ -67,7 +61,6 @@ const DropdownMenu = ({ label, items, onItemClick }) => {
   );
 };
 
-
 const NavLinks = ({ onGenreClick, onTypeClick }) => {
   const genres = [
     { label: "Adult", genre: "adult" },
@@ -83,7 +76,7 @@ const NavLinks = ({ onGenreClick, onTypeClick }) => {
         <button
           key={link.label}
           onClick={() => onGenreClick(link.genre)}
-          className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+          className="text-gray-300  hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
         >
           {link.label}
         </button>
@@ -96,7 +89,9 @@ const NavLinks = ({ onGenreClick, onTypeClick }) => {
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(false); // State to manage active dropdown
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Use useNavigate
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -113,10 +108,16 @@ const Header = () => {
   const handleGenreClick = (genre) => {
     dispatch(setGenre(genre));
     dispatch(fetchMoviesByGenre(genre));
+    setIsOpen(false);
+    navigate("/"); // Navigate to the main page
   };
 
   const handleTypeClick = (type) => {
     dispatch(fetchMoviesByType(type));
+  };
+
+  const handleDropdownToggle = (dropdown) => {
+    setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
 
   useEffect(() => {
@@ -145,9 +146,9 @@ const Header = () => {
               <FaBars />
             </button>
           </div>
-          <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+          <div className=" lg:ml-20  flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex-shrink-0 text-lg font-bold">
-              <a className="text-2xl" href="/">
+              <a className="text-3xl" href="/">
                 OceanOfMovies
               </a>
             </div>
@@ -176,11 +177,15 @@ const Header = () => {
                   "Mystery",
                   "Romance",
                 ]}
+                isOpen={activeDropdown === "hollywood"}
+                onToggle={(isOpen) => handleDropdownToggle(isOpen ? "hollywood" : null)}
                 onItemClick={handleGenreClick}
               />
               <DropdownMenu
                 label="TV Shows"
                 items={["Show 1", "Show 2", "Show 3"]}
+                isOpen={activeDropdown === "tvshows"}
+                onToggle={(isOpen) => handleDropdownToggle(isOpen ? "tvshows" : null)}
                 onItemClick={handleGenreClick}
               />
               <div className="relative search-container hidden sm:block">
@@ -216,7 +221,7 @@ const Header = () => {
               />
             </svg>
           </button>
-          <NavLinks onGenreClick={handleGenreClick} onTypeClick={handleTypeClick} />
+          <NavLinks onGenreClick={handleGenreClick}  onTypeClick={handleTypeClick} />
           <DropdownMenu
             label="Hollywood"
             items={[
@@ -230,11 +235,15 @@ const Header = () => {
               "Mystery",
               "Romance",
             ]}
+            isOpen={activeDropdown === "hollywood"}
+            onToggle={(isOpen) => handleDropdownToggle(isOpen ? "hollywood" : null)}
             onItemClick={handleGenreClick}
           />
           <DropdownMenu
             label="TV Shows"
             items={["Show 1", "Show 2", "Show 3"]}
+            isOpen={activeDropdown === "tvshows"}
+            onToggle={(isOpen) => handleDropdownToggle(isOpen ? "tvshows" : null)}
             onItemClick={handleGenreClick}
           />
         </div>
