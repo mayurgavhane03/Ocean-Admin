@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { JoinTelegram } from "../constant";
 import { fetchMovieById } from "../store/movieSlice";
+import { Helmet } from "react-helmet-async";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -43,6 +44,10 @@ const MovieDetail = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-6">
+      <Helmet>
+        <title>{movie.title} - OceanOfMovies</title>
+        <meta name="description" content={`Watch and download ${movie.title}.`} />
+      </Helmet>
       <div className="text-center max-w-2xl">
         <h1 className="text-3xl text-white text-[24px] font-bold mb-10">
           {movie.title}

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchMovies, fetchMoviesByGenre } from '../store/movieSlice';
+import { Helmet } from 'react-helmet';
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -55,6 +56,10 @@ const MainPage = () => {
 
   return (
     <div className="p-8 lg:py-20 w-full h-full bg-gray-900">
+      <Helmet>
+      <title>OceanOfMovies</title>
+        <meta name="description" content={`Watch and download Any MOvie`} />
+      </Helmet>
       <h1 className="text-xl flex lg:ml-[100px] text-white font-bold mb-6">Latest Updates !</h1>
       <div className="flex flex-wrap lg:justify-center  h-[100%] gap-6">
         {content}
