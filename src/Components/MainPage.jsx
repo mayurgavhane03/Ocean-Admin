@@ -55,7 +55,7 @@ const MainPage = () => {
   }
 
   return (
-    <div className="p-8 lg:py-20 w-full h-full bg-gray-900">
+    <div className="p-8 lg:py-20 w-full min-h-screen bg-black">
       <Helmet>
       <title>OceanOfMovies</title>
         <meta name="description" content={`Watch and download Any MOvie`} />

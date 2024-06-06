@@ -16,7 +16,7 @@ const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
   };
 
   return (
-    <div className="relative sm:ml-36">
+    <div className=" lg:relative    ">
       <div className="flex justify-center items-center">
         <button
           onClick={() => onToggle(!isOpen)}
@@ -28,7 +28,7 @@ const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
       {isOpen && (
         <div
           className="absolute sm:mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 z-10"
-          style={{ top: '100%', right: '0', left: 'auto' }}
+          style={{ top: '4%', right: 'auto', left: '40%' }}
           onMouseLeave={() => onToggle(false)}
         >
           <div
@@ -64,6 +64,7 @@ const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
 const NavLinks = ({ onGenreClick, onTypeClick }) => {
   const genres = [
     { label: "Adult", genre: "adult" },
+    { label: "Bollywood", genre: "bollywood" },
     { label: "K-Drama", genre: "kdrama" },
     { label: "Anime", genre: "anime" },
     { label: "Animated", genre: "animated" },
@@ -89,7 +90,7 @@ const NavLinks = ({ onGenreClick, onTypeClick }) => {
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(false); // State to manage active dropdown
+  const [activeDropdown, setActiveDropdown] = useState(null); // State to manage active dropdown
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Use useNavigate
 
@@ -107,7 +108,11 @@ const Header = () => {
 
   const handleGenreClick = (genre) => {
     dispatch(setGenre(genre));
-    dispatch(fetchMoviesByGenre(genre));
+    if (genre === "bollywood") {
+      dispatch(fetchMoviesByType("bollywood"));
+    } else {
+      dispatch(fetchMoviesByGenre(genre));
+    }
     setIsOpen(false);
     navigate("/"); // Navigate to the main page
   };
@@ -134,7 +139,7 @@ const Header = () => {
   }, []);
 
   return (
-    <nav className="bg-gray-900 text-gray-100 pt-4">
+    <nav className="bg-[#121212] text-gray-100 p-2">
       <div className=" mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -221,7 +226,7 @@ const Header = () => {
               />
             </svg>
           </button>
-          <NavLinks onGenreClick={handleGenreClick}  onTypeClick={handleTypeClick} />
+          <NavLinks onGenreClick={handleGenreClick} onTypeClick={handleTypeClick} />
           <DropdownMenu
             label="Hollywood"
             items={[

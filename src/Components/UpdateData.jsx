@@ -1,30 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const MovieForm = () => {
+const UpdateData = () => {
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     title: "",
     imageUrl: "",
-    screenshots: [],
     type: "",
     imdbRating: "",
     directors: [],
     stars: [],
     languages: [],
+    screenshots: [],
     genres: [],
     allInOne: {
-      "480p": { url: "", size: "" },
-      "720p": { url: "", size: "" },
-      "1080p": { url: "", size: "" },
+      '480p': { url: "", size: "" },
+      '720p': { url: "", size: "" },
+      '1080p': { url: "", size: "" }
     },
     episodes: [],
   });
-
   const [isLoading, setIsLoading] = useState(false);
-  const [newEpisode, setNewEpisode] = useState({
-    title: "",
-    qualities: { "480p": "", "720p": "", "1080p": "" },
-  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/movies/${id}`);
+        const data = response.data;
+        setFormData({
+          title: data.title || "",
+          imageUrl: data.imageUrl || "",
+          type: data.type || "",
+          imdbRating: data.imdbRating || "",
+          directors: data.directors || [],
+          stars: data.stars || [],
+          languages: data.languages || [],
+          screenshots: data.screenshots || [],
+          genres: data.genres || [],
+          allInOne: data.allInOne || {
+            '480p': { url: "", size: "" },
+            '720p': { url: "", size: "" },
+            '1080p': { url: "", size: "" }
+          },
+          episodes: data.episodes || [],
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,39 +77,44 @@ const MovieForm = () => {
         },
       }));
     } else {
-      setFormData({
-        ...formData,
+      setFormData((prevData) => ({
+        ...prevData,
         [name]: value,
-      });
+      }));
     }
   };
 
   const handleArrayChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value.split(",").map((item) => item.trim()),
-    });
+    }));
   };
 
-  const handleEpisodeChange = (e) => {
+  const handleEpisodeChange = (e, index) => {
     const { name, value } = e.target;
     const [field, subfield] = name.split(".");
-
-    if (field === "qualities" && subfield) {
-      setNewEpisode((prevData) => ({
-        ...prevData,
-        qualities: {
-          ...prevData.qualities,
-          [subfield]: value,
-        },
-      }));
+    const episodes = [...formData.episodes];
+    if (subfield) {
+      episodes[index][field][subfield] = value;
     } else {
-      setNewEpisode({
-        ...newEpisode,
-        [name]: value,
-      });
+      episodes[index][field] = value;
     }
+    setFormData((prevData) => ({
+      ...prevData,
+      episodes,
+    }));
+  };
+
+  const addEpisode = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      episodes: [
+        ...prevData.episodes,
+        { title: "", qualities: { '480p': "", '720p': "", '1080p': "" } },
+      ],
+    }));
   };
 
   const uploadImage = async (file) => {
@@ -108,10 +140,10 @@ const MovieForm = () => {
     try {
       setIsLoading(true);
       const response = await uploadImage(file);
-      setFormData({
-        ...formData,
+      setFormData((prevData) => ({
+        ...prevData,
         imageUrl: response.secure_url,
-      });
+      }));
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
@@ -125,18 +157,17 @@ const MovieForm = () => {
 
     try {
       setIsLoading(true);
-      const uploadedFiles = Array.from(files);
       const urls = [];
 
-      for (const file of uploadedFiles) {
+      for (const file of files) {
         const response = await uploadImage(file);
         urls.push(response.secure_url);
       }
 
-      setFormData({
-        ...formData,
-        screenshots: [...formData.screenshots, ...urls],
-      });
+      setFormData((prevData) => ({
+        ...prevData,
+        screenshots: [...prevData.screenshots, ...urls],
+      }));
     } catch (error) {
       console.error("Error uploading images:", error);
     } finally {
@@ -144,77 +175,28 @@ const MovieForm = () => {
     }
   };
 
-  const handleAddEpisode = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      episodes: [...prevData.episodes, newEpisode],
-    }));
-    setNewEpisode({
-      title: "",
-      qualities: { "480p": "", "720p": "", "1080p": "" },
-    });
-  };
-
-  const handleRemoveEpisode = (index) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      episodes: prevData.episodes.filter((_, i) => i !== index),
-    }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Ensure allInOne is an empty object if not provided
-      const allInOne = formData.allInOne || {
-        "480p": { url: "", size: "" },
-        "720p": { url: "", size: "" },
-        "1080p": { url: "", size: "" },
-      };
-
-      // Ensure episodes is an empty array if not provided
-      const episodes = formData.episodes || [];
-
-      const dataToSend = {
-        ...formData,
-        allInOne,
-        episodes,
-        imdbRating: formData.imdbRating === "" ? "-" : formData.imdbRating,
-      };
-
-      const response = await axios.post(
-        "http://localhost:5000/api/movies",
-        dataToSend
-      );
-      console.log("Movie created:", response.data);
-
-      alert("Movie created successfully!");
-
-      setFormData({
-        title: "",
-        imageUrl: "",
-        screenshots: [],
-        type: "",
-        imdbRating: "",
-        directors: [],
-        stars: [],
-        languages: [],
-        genres: [],
-        allInOne: {
-          "480p": { url: "", size: "" },
-          "720p": { url: "", size: "" },
-          "1080p": { url: "", size: "" },
-        },
-        episodes: [],
-      });
+      const response = await axios.put(`http://localhost:5000/api/movies/${id}`, formData);
+      console.log("Movie updated:", response.data);
+      alert("Movie updated successfully!");
     } catch (error) {
-      console.error("Error creating movie:", error);
+      console.error("Error updating movie:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (!formData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="bg-black text-white p-4">
@@ -252,7 +234,7 @@ const MovieForm = () => {
               />
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, imageUrl: "" })}
+                onClick={() => setFormData((prevData) => ({ ...prevData, imageUrl: "" }))}
                 className="absolute top-2 right-2 text-white focus:outline-none"
               >
                 ❌
@@ -304,14 +286,21 @@ const MovieForm = () => {
           <label htmlFor="type" className="block mb-1">
             Type
           </label>
-          <input
-            type="text"
+          <select
             id="type"
             name="type"
             value={formData.type}
             onChange={handleChange}
             className="w-full px-3 py-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
-          />
+          >
+            <option value="movie">Movie</option>
+            <option value="series">Series</option>
+            <option            value="anime">Anime</option>
+            <option value="18">18+</option>
+            <option value="k-drama">K-Drama</option>
+            <option value="netflix">Netflix</option>
+            <option value="amazon">Amazon</option>
+          </select>
         </div>
         <div className="mb-4">
           <label htmlFor="imdbRating" className="block mb-1">
@@ -323,6 +312,9 @@ const MovieForm = () => {
             name="imdbRating"
             value={formData.imdbRating}
             onChange={handleChange}
+            min="0"
+            max="10"
+            step="0.1"
             className="w-full px-3 py-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
           />
         </div>
@@ -366,32 +358,6 @@ const MovieForm = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="allInOne" className="block mb-1">
-            Quality
-          </label>
-          {["480p", "720p", "1080p"].map((quality) => (
-            <div key={quality} className="mb-2">
-              <label className="block mb-1 capitalize">{quality}</label>
-              <input
-                type="text"
-                placeholder="URL"
-                name={`allInOne.${quality}.url`}
-                value={formData.allInOne[quality].url}
-                onChange={handleChange}
-                className="w-full px-3 py-2 mb-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
-              />
-              <input
-                type="text"
-                placeholder="Size"
-                name={`allInOne.${quality}.size`}
-                value={formData.allInOne[quality].size}
-                onChange={handleChange}
-                className="w-full px-3 py-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
-              />
-            </div>
-          ))}
-        </div>
-        <div className="mb-4">
           <label htmlFor="genres" className="block mb-1">
             Genres
           </label>
@@ -404,74 +370,83 @@ const MovieForm = () => {
             className="w-full px-3 py-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
           />
         </div>
-
-        {["series", "anime", "kdrama", "netflix", "amazon"].includes(
-          formData.type.toLowerCase()
-        ) && (
-          <div className="mb-4">
-            <h3 className="text-lg mb-2">Episodes</h3>
-            {formData.episodes.map((episode, index) => (
-              <div key={index} className="mb-4 p-2 bg-gray-900 rounded">
-                <h4 className="mb-2">{`Episode ${index + 1}: ${
-                  episode.title
-                }`}</h4>
-                {["480p", "720p", "1080p"].map((quality) => (
-                  <p key={quality}>
-                    <strong>{quality}:</strong> {episode.qualities[quality]}
-                  </p>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveEpisode(index)}
-                  className="mt-2 py-1 px-3 bg-red-500 text-white font-semibold rounded hover:bg-red-600 focus:outline-none"
-                >
-                  Remove Episode
-                </button>
+        <div className="mb-4">
+          <label htmlFor="allInOne" className="block mb-1">
+            All In One
+          </label>
+          <div className="flex flex-col space-y-2">
+            {["480p", "720p", "1080p"].map((quality) => (
+              <div key={quality} className="flex items-center space-x-2">
+                <label className="w-20">{quality} URL</label>
+                <input
+                  type="text"
+                  name={`allInOne.${quality}.url`}
+                  value={formData.allInOne[quality].url}
+                  onChange={handleChange}
+                  className="flex-1 px-3 py-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
+                />
+                <label className="w-20">{quality} Size</label>
+                <input
+                  type="text"
+                  name={`allInOne.${quality}.size`}
+                  value={formData.allInOne[quality].size}
+                  onChange={handleChange}
+                  className="flex-1 px-3 py-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
+                />
               </div>
             ))}
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Episode Title"
-                name="title"
-                value={newEpisode.title}
-                onChange={handleEpisodeChange}
-                className="w-full px-3 py-2 mb-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
-              />
-              {["480p", "720p", "1080p"].map((quality) => (
-                <div key={quality} className="mb-2">
-                  <label className="block mb-1 capitalize">{quality}</label>
+          </div>
+        </div>
+        {formData.type === "series" && (
+          <div className="mb-4">
+            <label className="block mb-1">Episodes</label>
+            {formData.episodes.map((episode, index) => (
+              <div key={index} className="mb-4 border-b border-gray-700 pb-4">
+                <div className="mb-2">
+                  <label className="block mb-1">Episode Title</label>
                   <input
                     type="text"
-                    placeholder="URL"
-                    name={`qualities.${quality}`}
-                    value={newEpisode.qualities[quality]}
-                    onChange={handleEpisodeChange}
-                    className="w-full px-3 py-2 mb-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
+                    name="title"
+                    value={episode.title}
+                    onChange={(e) => handleEpisodeChange(e, index)}
+                    className="w-full px-3 py-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
                   />
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={handleAddEpisode}
-                className="w-full py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 focus:outline-none"
-              >
-                Add Episode
-              </button>
-            </div>
+                <div className="flex flex-col space-y-2">
+                  {["480p", "720p", "1080p"].map((quality) => (
+                    <div key={quality} className="flex items-center space-x-2">
+                      <label className="w-20">{quality} URL</label>
+                      <input
+                        type="text"
+                        name={`qualities.${quality}`}
+                        value={episode.qualities[quality]}
+                        onChange={(e) => handleEpisodeChange(e, index)}
+                        className="flex-1 px-3 py-2 bg-gray-800 rounded text-white outline-none focus:bg-gray-700"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addEpisode}
+              className="w-full py-2 bg-green-600 rounded text-white hover:bg-green-700 transition duration-200"
+            >
+              Add Episode
+            </button>
           </div>
         )}
-
         <button
           type="submit"
-          className="w-full py-3 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 focus:outline-none"
-          disabled={isLoading}
+          className="w-full py-2 bg-blue-600 rounded text-white hover:bg-blue-700 transition duration-200"
         >
-          {isLoading ? "Creating..." : "Create Movie"}
+          {isLoading ? "Updating..." : "Update Movie"}
         </button>
       </form>
     </div>
   );
 };
 
-export default MovieForm;
+export default UpdateData;
+

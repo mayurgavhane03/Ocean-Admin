@@ -43,7 +43,7 @@ const MovieDetail = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-6">
+    <div className="min-h-screen flex items-center justify-center bg-black p-6">
       <Helmet>
         <title>{movie.title} - OceanOfMovies</title>
         <meta name="description" content={`Watch and download ${movie.title}.`} />
