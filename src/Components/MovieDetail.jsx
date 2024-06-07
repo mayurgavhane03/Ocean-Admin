@@ -46,7 +46,10 @@ const MovieDetail = () => {
     <div className="min-h-screen flex items-center justify-center bg-black p-6">
       <Helmet>
         <title>{movie.title} - OceanOfMovies</title>
-        <meta name="description" content={`Watch and download ${movie.title}.`} />
+        <meta
+          name="description"
+          content={`Watch and download ${movie.title}.`}
+        />
       </Helmet>
       <div className="text-center max-w-2xl">
         <h1 className="text-3xl text-white text-[24px] font-bold mb-10">
@@ -145,9 +148,8 @@ const MovieDetail = () => {
             </Link>
           </div>
         </div>
-        {movie.type === "series" && (
-          <div className="mt-8">
-            <h2 className="text-red-500 font-semibold text-2xl">Episodes</h2>
+        {(movie.type === "series" || movie.type === "netflix") && (
+          <div className="mt-8 ">
             {movie.episodes.map((episode, index) => (
               <div
                 key={index}
@@ -157,36 +159,66 @@ const MovieDetail = () => {
                     : "border-t border-white pt-4"
                 }`}
               >
-                <div className="flex justify-center items-center mb-4">
-                  <h3 className="text-xl font-bold text-[#ff9900]">
-                    {episode.title}:{" "}
-                  </h3>
-                  {Object.entries(episode.qualities).map(([quality, url]) => (
-                    <a
-                      key={quality}
-                      href={url}
-                      className="text-blue-400 ml-3 font-bold "
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {quality.toUpperCase()}
-                    </a>
-                  ))}
+                {episode.title.length > 10 ? (
+                  <div className="flex flex-col items-center justify-center mb-4">
+                    <h3 className="text-xl font-bold text-[#ff9900] mb-2">
+                      {episode.title}
+                    </h3>
+                    <div className="flex justify-center items-center">
+                      {Object.entries(episode.qualities).map(
+                        ([quality, url]) => (
+                          <a
+                            key={quality}
+                            href={url}
+                            className="text-blue-400 ml-3 font-bold "
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {quality.toUpperCase()}
+                          </a>
+                        )
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex justify-center items-center mb-4">
+                    <h3 className="text-xl font-bold text-[#ff9900]">
+                      {episode.title}:{" "}
+                    </h3>
+                    {Object.entries(episode.qualities).map(
+                      ([quality, url]) => (
+                        <a
+                          key={quality}
+                          href={url}
+                          className="text-blue-400 ml-3 font-bold "
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {quality.toUpperCase()}
+                        </a>
+                      )
+                    )}
+                    </div>
+                  )}
+                  {index === movie.episodes.length - 1 && (
+                    <div className="mb-2 text-2xl flex font-serif justify-center items-center border-b border-white" />
+                  )}
                 </div>
-                {index === movie.episodes.length - 1 && (
-                  <div className="mb-2 text-2xl flex font-serif justify-center items-center border-b border-white" />
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        <h1 className="text-3xl mt-10 text-white mb-10 decoration-from-font  "><span className="  text-red-600 font-bold font-serif text-2xl "> DESCRIPTION  : </span>
-          {movie.title} Available only on OceanOfMovie The Best Movie Site
-        </h1>
+              ))}
+            </div>
+          )}
+  
+          <h1 className="text-3xl mt-10 text-white mb-10 decoration-from-font">
+            <span className="text-red-600 font-bold font-serif text-2xl">
+              {" "}
+              DESCRIPTION :{" "}
+            </span>
+            {movie.title} Available only on OceanOfMovie The Best Movie Site
+          </h1>
+        </div>
       </div>
-    </div>
-  );
-};
-
-export default MovieDetail;
+    );
+  };
+  
+  export default MovieDetail;
+  

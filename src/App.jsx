@@ -4,8 +4,7 @@ import MainPage from "./Components/MainPage";
 import MovieDetail from "./Components/MovieDetail";
 import MovieForm from "./Components/MovieForm";
 import Header from "./Components/Header";
-import ShowData from "./Components/ShowData";
-import UpdateData from "./Components/UpdateData";
+ 
 
 const AppLayout = () => {
   return (
@@ -32,16 +31,7 @@ const router = createBrowserRouter([
       {
         path: "movie/:id",
         element: <MovieDetail />,
-      },{
-        path: "mayur/:id",
-        element:<UpdateData  />
-
       },
-      
-      {
-        path:"mayurgavhane",
-        element:<ShowData  />
-      }
     ],
   },
 ]);

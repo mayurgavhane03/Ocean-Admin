@@ -6,7 +6,6 @@ import { LuSearch } from "react-icons/lu";
 import { fetchMoviesByGenre, fetchMoviesByType, setGenre } from "../store/movieSlice";
 import { FaChevronDown } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
-
 import Search from "./Search";
 
 const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
@@ -66,8 +65,7 @@ const NavLinks = ({ onGenreClick, onTypeClick }) => {
     { label: "Adult", genre: "adult" },
     { label: "Bollywood", genre: "bollywood" },
     { label: "K-Drama", genre: "kdrama" },
-    { label: "Anime", genre: "anime" },
-    { label: "Animated", genre: "animated" },
+    { label: "Animated", genre: "Animation" },
     { label: "Netflix", genre: "netflix" },
   ];
 
@@ -94,6 +92,10 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Use useNavigate
 
+
+
+
+  
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -105,11 +107,13 @@ const Header = () => {
   const closeSearch = () => {
     setIsSearchOpen(false);
   };
-
+  
   const handleGenreClick = (genre) => {
     dispatch(setGenre(genre));
     if (genre === "bollywood") {
       dispatch(fetchMoviesByType("bollywood"));
+    }  if (genre === "netflix") {
+      dispatch(fetchMoviesByType("netflix"));
     } else {
       dispatch(fetchMoviesByGenre(genre));
     }
@@ -152,9 +156,9 @@ const Header = () => {
             </button>
           </div>
           <div className=" lg:ml-20  flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex-shrink-0 text-lg font-bold">
+            <div className="flex-shrink-0  text-lg font-bold">
               <a className="text-3xl" href="/">
-                OceanOfMovies
+             <img className="h-[250px]" src="https://res.cloudinary.com/doi13tpyz/image/upload/v1717696562/logo-color-removebg-preview_dvvu3j.png" alt="" />
               </a>
             </div>
           </div>
@@ -186,13 +190,13 @@ const Header = () => {
                 onToggle={(isOpen) => handleDropdownToggle(isOpen ? "hollywood" : null)}
                 onItemClick={handleGenreClick}
               />
-              <DropdownMenu
+              {/* <DropdownMenu
                 label="TV Shows"
                 items={["Show 1", "Show 2", "Show 3"]}
                 isOpen={activeDropdown === "tvshows"}
                 onToggle={(isOpen) => handleDropdownToggle(isOpen ? "tvshows" : null)}
                 onItemClick={handleGenreClick}
-              />
+              /> */}
               <div className="relative search-container hidden sm:block">
                 <Search />
               </div>
