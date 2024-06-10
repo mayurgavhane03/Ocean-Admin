@@ -4,13 +4,17 @@ import MainPage from "./Components/MainPage";
 import MovieDetail from "./Components/MovieDetail";
 import MovieForm from "./Components/MovieForm";
 import Header from "./Components/Header";
+import Logo from "./Components/Logo";
+import Footer from "./Components/Footer";
  
 
 const AppLayout = () => {
   return (
     <div>
+      <Logo />
       <Header />
       <Outlet />
+      <Footer />
     </div>
   );
 };
@@ -39,7 +43,7 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <div className="h-auto">
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
     </div>
   );
 };

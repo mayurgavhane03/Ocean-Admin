@@ -35,7 +35,11 @@ const MovieDetail = () => {
   }
 
   if (!movie) {
-    return null;
+   return (
+    <div className=" flex justify-center items-center ">
+        <h1>loadding</h1>
+    </div>
+   )
   }
 
   const areAllUrlsAvailable = () => {
@@ -103,8 +107,8 @@ const MovieDetail = () => {
           </div>
         </div>
         <div className="mt-12">
-          <h1 className="text-red-500 font-serif font-semibold text-3xl">
-            DOWNLOAD LINKS
+          <h1 className="text-red-500  font-serif font-semibold lg:text-3xl text-xl">
+           --== DOWNLOAD LINKS ==--
           </h1>
         </div>
         <div className="mt-4">
