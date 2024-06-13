@@ -3,8 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LuSearch } from "react-icons/lu";
 import { fetchMoviesByGenre, fetchMoviesByType, setGenre } from "../store/movieSlice";
-import { FaChevronDown } from "react-icons/fa";
-import { FaBars } from "react-icons/fa";
+import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import Search from "./Search";
 
 const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
@@ -14,7 +13,7 @@ const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
   };
 
   return (
-    <div className="lg:relative">
+    <div className="relative lg:relative">
       <div className="flex justify-center items-center">
         <button
           onClick={() => onToggle(!isOpen)}
@@ -25,7 +24,7 @@ const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
       </div>
       {isOpen && (
         <div
-          className="absolute sm:mt-2 w-48 rounded-md shadow-lg bg-[#282828] ring-1 ring-black ring-opacity-5 z-10"
+          className="absolute sm:mt-2 w-48 rounded-md shadow-lg bg-[#282828] ring-1 ring-black ring-opacity-5 z-10 transition-transform duration-300 ease-in-out"
           style={{ top: '4%', right: 'auto', left: '40%' }}
           onMouseLeave={() => onToggle(false)}
         >
@@ -51,7 +50,7 @@ const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
       <style jsx>{`
         @media (max-width: 640px) {
           .absolute {
-            right: 0; 
+            right: 0;
           }
         }
       `}</style>
@@ -132,8 +131,8 @@ const Header = () => {
   }, []);
 
   return (
-    <nav className="bg-[#121212] text-gray-100 p-2">
-      <div className="mx-auto lg:flex justify-center items-center  px-2 sm:px-6 lg:px-8">
+    <nav className="bg-[#121212] text-gray-100 mb-[1px] mt-[1px] p-2">
+      <div className="mx-auto lg:flex justify-center items-center px-2 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           <div className="absolute inset-y-0 left-0 flex items-center lg:hidden">
             <button
@@ -144,7 +143,7 @@ const Header = () => {
               <FaBars />
             </button>
           </div>
-          <div className=" lg:hidden  flex-1 flex items-center justify-center lg:items-stretch lg:justify-start">
+          <div className="lg:hidden flex-1 flex items-center justify-center lg:items-stretch lg:justify-start">
             <div className="flex-shrink-0 text-lg font-bold">
               <a className="text-3xl" href="/">
                 <img
@@ -193,51 +192,39 @@ const Header = () => {
         </div>
       </div>
       <div
-        className={`lg:hidden fixed top-0 left-0 w-full bg-[#121212] shadow-lg z-50 transform ${
+        className={`lg:hidden min-h-screen fixed top-0 left-0 w-64  bg-[#121212] shadow-lg z-50 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out`}
       >
-        <div className="px-2 pt-2 pb-3 space-y-1 flex flex-col items-start">
-          <button
-            onClick={toggleMenu}
-            className="text-gray-400 hover:text-white focus:outline-none"
-          >
-            <svg
-              className="block h-6 w-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-          <NavLinks onGenreClick={handleGenreClick} />
-          <DropdownMenu
-            label="Hollywood"
-            items={[
-              "Action",
-              "Adventure",
-              "Drama",
-              "Comedy",
-              "Fantasy",
-              "History",
-              "Horror",
-              "Thriller",
-              "Mystery",
-              "Romance",
-            ]}
-            isOpen={activeDropdown === "hollywood"}
-            onToggle={(isOpen) => handleDropdownToggle(isOpen ? "hollywood" : null)}
-            onItemClick={handleGenreClick}
-          />
-        </div>
+        <div className="relative px-2 pt-2 pb-3 space-y-1 flex flex-col items-start">
+  <button
+    onClick={toggleMenu}
+    className="absolute top-0 right-0 text-gray-400 hover:text-white focus:outline-none"
+    style={{ margin: '0.5rem' }}  // Add margin for better spacing
+  >
+    <FaTimes />
+  </button>
+  <NavLinks onGenreClick={handleGenreClick} />
+  <DropdownMenu
+    label="Hollywood"
+    items={[
+      "Action",
+      "Adventure",
+      "Drama",
+      "Comedy",
+      "Fantasy",
+      "History",
+      "Horror",
+      "Thriller",
+      "Mystery",
+      "Romance",
+    ]}
+    isOpen={activeDropdown === "hollywood"}
+    onToggle={(isOpen) => handleDropdownToggle(isOpen ? "hollywood" : null)}
+    onItemClick={handleGenreClick}
+  />
+</div>
+
       </div>
       {isSearchOpen && (
         <div className="flex justify-center items-center top-16 w-full z-50">

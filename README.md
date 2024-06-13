@@ -16,6 +16,9 @@ and whenever user click on the card in url i crete differect url like movie/movi
 click on serach par whenver he type for movie it brings all movie on main page  
 - the most impartant part of the website is secuiring all the data 
  for that i use crypto.js which ecrypt data the whenever we try to fetchh data first it comes in a string from we have first decrypt that data 
+
+ - created the navbar footer 
+ - desable the right click onthe whole application  
  ### FOR INCREPYTION AND DECRYPTION I USE CRYPTO.JS
 https://chatgpt.com/share/c035ebe8-8108-4144-b5b4-ff1fc1627351
  - impleted the SEO in the applicaiton for better serarch  
