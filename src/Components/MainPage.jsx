@@ -29,6 +29,21 @@ const MainPage = () => {
 
   let content;
 
+  // Shimmer UI
+  const shimmerCards = Array.from({ length: moviesPerPage }).map((_, index) => (
+    <div
+      key={index}
+      className="shimmer-wrapper flex lg:w-56 lg:p-4 rounded-lg lg:items-center lg:justify-center lg:flex-col"
+    >
+      <div className="shimmer w-[120px] lg:w-[200px] lg:h-[300px] h-[200px] rounded-lg mb-4"></div>
+      <div className="flex flex-col">
+        <div className="shimmer w-[350px]  ml-4 lg:w-[150px] h-5 rounded"></div>
+        <div className="shimmer w-[300px] mt-3 ml-4 lg:w-[150px] h-5 rounded"></div>
+        <div className="shimmer w-[80px] mt-3 ml-4 lg:w-[150px] h-5 rounded"></div>
+      </div>
+    </div>
+  ));
+
   // Logic to paginate movies
   const indexOfLastMovie = currentPage * moviesPerPage;
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
@@ -37,16 +52,26 @@ const MainPage = () => {
       ? searchResults.slice(indexOfFirstMovie, indexOfLastMovie)
       : movies.slice(indexOfFirstMovie, indexOfLastMovie);
 
-  if (searchStatus === "loading" || movies.length === 0) {
-    content = <p>Loading...</p>;
+  if (movieStatus === "loading") {
+    content = (
+      <div className="flex flex-wrap lg:justify-center h-[100%] gap-6">
+        {shimmerCards}
+      </div>
+    );
+  } else if (searchResults.length === 0 && movies.length === 0) {
+    content = (
+      <div className="h-[100vh]">
+        <p className="text-white">Movie not available</p>
+      </div>
+    );
   } else if (currentMovies.length > 0) {
     content = currentMovies.map((movie) => (
       <Link key={movie._id} to={`/movie/${movie._id}`} className="no-underline">
-        <div className="  flex lg:w-56  lg:p-4 rounded-lg  lg:items-center lg:justify-center lg:flex-col ">
+        <div className="flex lg:w-56 lg:p-4 rounded-lg lg:items-center lg:justify-center lg:flex-col">
           <img
             src={movie.imageUrl}
             alt={movie.title}
-            className="w-[120px]  lg:w-[200px]  rounded-lg mb-4"
+            className="w-[120px] lg:w-[200px] rounded-lg mb-4"
           />
           <h3 className="text-[17px] ml-5 text-white font-semibold">
             {movie.title}
@@ -57,7 +82,7 @@ const MainPage = () => {
   } else if (movieStatus === "succeeded" && movies.length === 0) {
     content = (
       <div className="h-[100vh]">
-        <p className="text-white">Movie not available</p>;
+        <p className="text-white">Movie not available</p>
       </div>
     );
   } else if (movieStatus === "failed" || searchStatus === "failed") {
@@ -147,13 +172,13 @@ const MainPage = () => {
     <div className="p-8 lg:py-20 w-full min-h-screen bg-black">
       <Helmet>
         <title>Ocean Of Movies</title>
-        <meta name="description" content={`Watch and download Any MOvie`} />
+        <meta name="description" content={`Watch and download Any Movie`} />
       </Helmet>
 
       <h1 className="text-xl flex lg:ml-[138px] text-white font-bold mb-6">
         Latest Updates !
       </h1>
-      <div className="flex flex-wrap lg:justify-center  h-[100%] gap-6">
+      <div className="flex flex-wrap  lg:justify-center h-[100%] gap-6">
         {content}
       </div>
       <div className="flex justify-center mt-4">

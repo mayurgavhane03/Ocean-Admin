@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { JoinTelegram } from "../constant";
+import { JoinTelegram, Telegram } from "../constant";
 import { fetchMovieById } from "../store/movieSlice";
 import { Helmet } from "react-helmet-async";
 
@@ -20,7 +20,7 @@ const MovieDetail = () => {
 
   if (movieStatus === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div className="min-h-screen bg-black flex items-center justify-center text-white">
         Loading...
       </div>
     );
@@ -28,18 +28,18 @@ const MovieDetail = () => {
 
   if (movieStatus === "failed") {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div className="min-h-screen bg-black flex items-center justify-center text-white">
         {error}
       </div>
     );
   }
 
   if (!movie) {
-   return (
-    <div className=" flex justify-center items-center ">
+    return (
+      <div className=" flex justify-center items-center ">
         <h1>loadding</h1>
-    </div>
-   )
+      </div>
+    )
   }
 
   const areAllUrlsAvailable = () => {
@@ -65,9 +65,9 @@ const MovieDetail = () => {
           className="w-auto h-[500px] mx-auto rounded-lg mb-4"
         />
         <div className="flex justify-center mb-4">
-          <Link to="/">
+          <a href={Telegram} target="_blank" rel="noopener noreferrer">
             <img src={JoinTelegram} alt="Join Telegram" />
-          </Link>
+          </a>
         </div>
         <div className="text-white">
           <p className="mb-2 font-bold text-blue-500 text-2xl">
@@ -108,7 +108,7 @@ const MovieDetail = () => {
         </div>
         <div className="mt-12">
           <h1 className="text-red-500  font-serif font-semibold lg:text-3xl text-xl">
-           --== DOWNLOAD LINKS ==--
+            --== DOWNLOAD LINKS ==--
           </h1>
         </div>
         <div className="mt-4">
@@ -189,40 +189,37 @@ const MovieDetail = () => {
                     <h3 className="text-xl font-bold text-[#ff9900]">
                       {episode.title}:{" "}
                     </h3>
-                    {Object.entries(episode.qualities).map(
-                      ([quality, url]) => (
-                        <a
-                          key={quality}
-                          href={url}
-                          className="text-blue-400 ml-3 font-bold "
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {quality.toUpperCase()}
-                        </a>
-                      )
-                    )}
-                    </div>
-                  )}
-                  {index === movie.episodes.length - 1 && (
-                    <div className="mb-2 text-2xl flex font-serif justify-center items-center border-b border-white" />
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-  
-          <h1 className="text-3xl mt-10 text-white mb-10 decoration-from-font">
-            <span className="text-red-600 font-bold font-serif text-2xl">
-              {" "}
-              DESCRIPTION :{" "}
-            </span>
-            {movie.title} Available only on OceanOfMovie The Best Movie Site
-          </h1>
-        </div>
+                    {Object.entries(episode.qualities).map(([quality, url]) => (
+                      <a
+                        key={quality}
+                        href={url}
+                        className="text-blue-400 ml-3 font-bold "
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {quality.toUpperCase()}
+                      </a>
+                    ))}
+                  </div>
+                )}
+                {index === movie.episodes.length - 1 && (
+                  <div className="mb-2 text-2xl flex font-serif justify-center items-center border-b border-white" />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <h1 className="text-3xl mt-10 text-white mb-10 decoration-from-font">
+          <span className="text-red-600 font-bold font-serif text-2xl">
+            {" "}
+            DESCRIPTION :{" "}
+          </span>
+          {movie.title} Available only on OceanOfMovie The Best Movie Site
+        </h1>
       </div>
-    );
-  };
-  
-  export default MovieDetail;
-  
+    </div>
+  );
+};
+
+export default MovieDetail;
