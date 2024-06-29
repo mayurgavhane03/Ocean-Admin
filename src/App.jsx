@@ -8,7 +8,9 @@ import Logo from "./Components/Logo";
 import Footer from "./Components/Footer";
 import NavBar from "./Components/Navbar";
 import VideoPlayer from "./Components/VideoPlayer";
-import DMCAPolicy from "./Components/Navbar Compnents/DMCAPolicy";
+import DMCAPolicy from "./Components/Navbar Compnents/DMCAPolicy ";
+import DisclaimerPolicy from "./Components/Navbar Compnents/DisclaimerPolicy";
+import ContactForm from "./Components/Navbar Compnents/ContactForm";
  
 
 const AppLayout = () => {
@@ -43,6 +45,18 @@ const router = createBrowserRouter([
       {
         path: "how-to-download",
         element: <VideoPlayer />
+      },
+      {
+        path: "dmca-policy",
+        element: <DMCAPolicy />
+      },
+      {
+        path:"declaimer",
+        element:<DisclaimerPolicy />
+      },
+      {
+        path:"contact",
+        element:<ContactForm />
       },
     ],
   },

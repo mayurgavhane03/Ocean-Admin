@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchMovies, fetchMoviesByGenre } from "../store/movieSlice";
 import { Helmet } from "react-helmet";
+import { telegramRequestGroup } from "../constant";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -60,9 +61,10 @@ const MainPage = () => {
     );
   } else if (searchResults.length === 0 && movies.length === 0) {
     content = (
-      <div className="h-[100vh]">
-        <p className="text-white">Movie not available</p>
-      </div>
+      <div className="h-[100vh] flex-col items-center justify-center  ">
+      <p className="text-white"> Movie not available 😔</p>
+      <p className="text-white mt-5"> 📌If Movie not available then Request in our Telegram Group   <a className=" text-blue-500 font-bold  " href={telegramRequestGroup}> HERE</a></p>
+    </div>
     );
   } else if (currentMovies.length > 0) {
     content = currentMovies.map((movie) => (

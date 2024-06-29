@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaBars, FaTimes, FaTelegramPlane } from "react-icons/fa";
 import { Telegram, telegramRequestGroup } from "../constant";
@@ -15,7 +15,7 @@ const NavBar = () => {
       <div className="lg:hidden">
         <button
           onClick={toggleMenu}
-          className="text-gray-400 ml-2 md:ml-6  hover:text-white focus:outline-none"
+          className="text-gray-400 ml-4  mr-4 md:ml-6  hover:text-white focus:outline-none"
         >
           <FaBars />
         </button>
@@ -29,7 +29,7 @@ const NavBar = () => {
               activeClassName="bg-gray-700 text-white"
               target="_blank"
             >
-              <FaTelegramPlane className="mr-2" /> Movie Request Group
+              <FaTelegramPlane className="mr-2 text-[#1C93E3]" /> Movie Request Group
             </NavLink>
             <NavLink
               to={Telegram}
@@ -37,7 +37,7 @@ const NavBar = () => {
               activeClassName="bg-gray-700 text-white"
               target="_blank"
             >
-              <FaTelegramPlane className="mr-2" /> Telegram Channel
+              <FaTelegramPlane className="mr-2 text-[#1C93E3]" /> Telegram Channel
             </NavLink>
             <NavLink
               to="/how-to-download"
@@ -47,14 +47,14 @@ const NavBar = () => {
               How To Download?
             </NavLink>
             <NavLink
-              to="/vpn"
+              to="/"
               className="text-gray-400 hover:bg-[#282828] hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               activeClassName="bg-gray-700 text-white"
             >
               VPN!
             </NavLink>
             <NavLink
-              to="/ "
+              to="/contact"
               className="text-gray-400 hover:bg-[#282828] hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               activeClassName="bg-gray-700 text-white"
             >
@@ -68,7 +68,7 @@ const NavBar = () => {
               DMCA
             </NavLink>
             <NavLink
-              to="/ "
+              to="/declaimer"
               className="text-gray-400 hover:bg-[#282828] hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               activeClassName="bg-gray-700 text-white"
             >
@@ -96,7 +96,7 @@ const NavBar = () => {
             target="_blank"
             onClick={toggleMenu}
           >
-            Movie Request Group
+           <FaTelegramPlane className="mr-2 text-[#1C93E3]" />  Movie Request Group
           </NavLink>
           <NavLink
             to={Telegram}
@@ -105,7 +105,7 @@ const NavBar = () => {
             target="_blank"
             onClick={toggleMenu}
           >
-            Telegram Channel
+           <FaTelegramPlane className="mr-2 text-[#1C93E3]" />  Telegram Channel
           </NavLink>
           <NavLink
             to="/how-to-download"
@@ -124,7 +124,7 @@ const NavBar = () => {
             VPN!
           </NavLink>
           <NavLink
-            to="/"
+            to="/contact"
             className="block text-gray-400 hover:bg-[#282828] hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             activeClassName="bg-gray-700 text-white"
             onClick={toggleMenu}
@@ -140,7 +140,7 @@ const NavBar = () => {
             DMCA
           </NavLink>
           <NavLink
-            to="/"
+            to="/declaimer"
             className="block text-gray-400 hover:bg-[#282828] hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             activeClassName="bg-gray-700 text-white"
             onClick={toggleMenu}
