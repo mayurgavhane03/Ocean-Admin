@@ -60,7 +60,7 @@ const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
 
 const NavLinks = ({ onGenreClick }) => {
   const genres = [
-    { label: "Adult", genre: "adult" },
+    // { label: "Adult", genre: "adult" },
     { label: "Dual Audio", genre: "Dualaudio" },
     { label: "Bollywood", genre: "bollywood" },
     { label: "K-Drama", genre: "kdrama" },
