@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import CryptoJS from 'crypto-js';
 import { sortMoviesByDate } from '../helpers/sortMovieByDate';
+import { backendApi } from '../constant';
 
 // Secret key for encryption/decryption
 const secretKey = 'MNMN0808';
@@ -17,20 +18,20 @@ const decryptData = (encryptedData) => {
 };
 
 export const fetchMovies = createAsyncThunk('movies/fetchMovies', async () => {
-  const response = await fetch('http://localhost:5000/api/movies');
+  const response = await fetch(backendApi);
   const encryptedData = await response.json();
   const data = decryptData(encryptedData.data);
   return sortMoviesByDate(data);
 });
 
 export const fetchMovieById = createAsyncThunk('movies/fetchMovieById', async (id) => {
-  const response = await fetch(`http://localhost:5000/api/movies/${id}`);
+  const response = await fetch(`${backendApi}${id}`);
   const encryptedData = await response.json();
   return decryptData(encryptedData.data);
 });
 
 export const fetchMoviesByGenre = createAsyncThunk('movies/fetchMoviesByGenre', async (genre) => {
-  const response = await fetch(`http://localhost:5000/api/movies/genre/${genre}`);
+  const response = await fetch(`${backendApi}/genre/${genre}`);
   const encryptedData = await response.json();
   const data = decryptData(encryptedData.data);
   return sortMoviesByDate(data);
@@ -44,7 +45,7 @@ export const fetchMoviesByTitle = createAsyncThunk('movies/fetchMoviesByTitle', 
 });
 
 export const fetchMoviesByType = createAsyncThunk('movies/fetchMoviesByType', async (type) => {
-  const response = await fetch(`http://localhost:5000/api/movies/type/${type}`);
+  const response = await fetch(`${backendApi}/type/${type}`);
   const encryptedData = await response.json();
   const data = decryptData(encryptedData.data);
   return sortMoviesByDate(data);

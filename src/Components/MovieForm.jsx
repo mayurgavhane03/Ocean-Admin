@@ -16,7 +16,9 @@ const MovieForm = () => {
     allInOne: {
       "480p": { url: "", size: "" },
       "720p": { url: "", size: "" },
+      "720p 10 Bit": { url: "", size: "" },
       "1080p": { url: "", size: "" },
+      "1080p 10 Bit": { url: "", size: "" },
     },
     episodes: [],
   });
@@ -168,7 +170,9 @@ const MovieForm = () => {
       const allInOne = formData.allInOne || {
         "480p": { url: "", size: "" },
         "720p": { url: "", size: "" },
+        "720p 10 Bit": { url: "", size: "" },
         "1080p": { url: "", size: "" },
+        "1080p 10 Bit": { url: "", size: "" },
       };
 
       const episodes = formData.episodes || [];
