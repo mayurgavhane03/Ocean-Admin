@@ -13,7 +13,7 @@ const MainPage = () => {
   const error = useSelector((state) => state.movies.error);
   const genre = useSelector((state) => state.movies.genre);
   const searchStatus = useSelector((state) => state.movies.searchStatus);
-
+  console.log(movies);
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 10;
@@ -62,9 +62,16 @@ const MainPage = () => {
   } else if (searchResults.length === 0 && movies.length === 0) {
     content = (
       <div className="h-[100vh] flex-col items-center justify-center  ">
-      <p className="text-white"> Movie not available 😔</p>
-      <p className="text-white mt-5"> 📌If Movie not available then Request in our Telegram Group   <a className=" text-blue-500 font-bold  " href={telegramRequestGroup}> HERE</a></p>
-    </div>
+        <p className="text-white"> Movie not available 😔</p>
+        <p className="text-white mt-5">
+          {" "}
+          📌If Movie not available then Request in our Telegram Group{" "}
+          <a className=" text-blue-500 font-bold  " href={telegramRequestGroup}>
+            {" "}
+            HERE
+          </a>
+        </p>
+      </div>
     );
   } else if (currentMovies.length > 0) {
     content = currentMovies.map((movie) => (
@@ -180,6 +187,10 @@ const MainPage = () => {
       <h1 className="text-xl flex lg:ml-[138px] text-white font-bold mb-6">
         Latest Updates !
       </h1>
+      <h1 className="text-sm flex lg:ml-[138px] text-white font-bold mb-6 absolute top-[45%]  right-0 transform translate-x-[-50%] translate-y-[50%]">
+         {movies.length}
+      </h1>
+
       <div className="flex flex-wrap  lg:justify-center h-[100%] gap-6">
         {content}
       </div>

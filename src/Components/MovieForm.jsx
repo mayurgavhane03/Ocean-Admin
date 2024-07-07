@@ -185,7 +185,7 @@ const MovieForm = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/movies",
+        "https://bk1.oceanofmovies.tech/api/movies",
         dataToSend
       );
       console.log("Movie created:", response.data);

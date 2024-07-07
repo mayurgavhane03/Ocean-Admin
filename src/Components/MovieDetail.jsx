@@ -11,7 +11,7 @@ const MovieDetail = () => {
   const movie = useSelector((state) => state.movies.movieDetails);
   const movieStatus = useSelector((state) => state.movies.movieDetailsStatus);
   const error = useSelector((state) => state.movies.movieDetailsError);
-console.log(movie)
+
   useEffect(() => {
     if (movieStatus === "idle" || (movie && movie._id !== id)) {
       dispatch(fetchMovieById(id));
@@ -37,13 +37,13 @@ console.log(movie)
   if (!movie) {
     return (
       <div className=" flex justify-center items-center ">
-        <h1>loadding</h1>
+        <h1>Loading...</h1>
       </div>
-    )
+    );
   }
 
   const areAllUrlsAvailable = () => {
-    return Object.values(movie.allInOne).every((info) => info.url);
+    return movie.allInOne && Object.values(movie.allInOne).every((info) => info.url);
   };
 
   return (
@@ -60,8 +60,8 @@ console.log(movie)
           {movie.title}
         </h1>
         <img
-          src={movie.imageUrl}
-          alt={movie.title}
+          src={movie.imageUrl || ""}
+          alt={movie.title || ""}
           className="w-auto h-[500px] mx-auto rounded-lg mb-4"
         />
         <div className="flex justify-center mb-4">
@@ -71,7 +71,7 @@ console.log(movie)
         </div>
         <div className="text-white">
           <p className="mb-2 font-bold text-blue-500 text-2xl">
-            IMDb Rating: {movie.imdbRating}
+            IMDb Rating: {movie.imdbRating || "NA"}
           </p>
           <p className="mb-2 font-bold">
             Directors:{" "}
@@ -125,7 +125,7 @@ console.log(movie)
                 </a>
               </div>
             )}
-            {Object.entries(movie.allInOne).map(
+            {movie.allInOne && Object.entries(movie.allInOne).map(
               ([quality, info]) =>
                 info.url && (
                   <div

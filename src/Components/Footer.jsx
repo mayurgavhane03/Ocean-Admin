@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="bg-[#121212]     text-white py-4">
       <div className=" mx-auto text-center px-4 lg:px-0">
-        <div className=" lg:flex justify-center items-center mt-2 mb-4">
+        <div className=" flex justify-center items-center mt-2 mb-4">
           <a className="" href="/">
             <img
               className="h-[75px]"
