@@ -11,11 +11,13 @@ import VideoPlayer from "./Components/VideoPlayer";
 import DMCAPolicy from "./Components/Navbar Compnents/DMCAPolicy ";
 import DisclaimerPolicy from "./Components/Navbar Compnents/DisclaimerPolicy";
 import ContactForm from "./Components/Navbar Compnents/ContactForm";
+import ScrollToTop from "./Components/hook/useScrollToTop";
  
 
 const AppLayout = () => {
   return (
     <div>
+      <ScrollToTop   /> 
       <NavBar/>
       <Logo />
       <Header />

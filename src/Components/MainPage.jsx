@@ -13,7 +13,7 @@ const MainPage = () => {
   const error = useSelector((state) => state.movies.error);
   const genre = useSelector((state) => state.movies.genre);
   const searchStatus = useSelector((state) => state.movies.searchStatus);
-  console.log(movies);
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 10;
@@ -38,8 +38,8 @@ const MainPage = () => {
     >
       <div className="shimmer w-[120px] lg:w-[200px] lg:h-[300px] h-[200px] rounded-lg mb-4"></div>
       <div className="flex flex-col">
-        <div className="shimmer w-[350px]  ml-4 lg:w-[150px] h-5 rounded"></div>
-        <div className="shimmer w-[300px] mt-3 ml-4 lg:w-[150px] h-5 rounded"></div>
+        <div className="shimmer w-[200px]  ml-4 lg:w-[150px] h-5 rounded"></div>
+        <div className="shimmer w-[200px] mt-3 ml-4 lg:w-[150px] h-5 rounded"></div>
         <div className="shimmer w-[80px] mt-3 ml-4 lg:w-[150px] h-5 rounded"></div>
       </div>
     </div>
@@ -130,7 +130,10 @@ const MainPage = () => {
           <>
             <button
               className="bg-white m-2 p-2"
-              onClick={() => setCurrentPage(1)}
+              onClick={() => {
+                setCurrentPage(1);
+                window.scrollTo(0, 0);
+              }}
             >
               1
             </button>
@@ -143,7 +146,10 @@ const MainPage = () => {
             className={`bg-white m-2 p-2 ${
               currentPage === number ? "font-bold" : ""
             }`}
-            onClick={() => setCurrentPage(number)}
+            onClick={() => {
+              setCurrentPage(number);
+              window.scrollTo(0, 0);
+            }}
           >
             {number}
           </button>
@@ -155,7 +161,10 @@ const MainPage = () => {
             )}
             <button
               className="bg-white m-2 p-2"
-              onClick={() => setCurrentPage(lastPage)}
+              onClick={() => {
+                setCurrentPage(lastPage);
+                window.scrollTo(0, 0);
+              }}
             >
               {lastPage}
             </button>
@@ -170,7 +179,10 @@ const MainPage = () => {
           currentPage === number ? "font-bold" : ""
         }`}
         key={number}
-        onClick={() => setCurrentPage(number)}
+        onClick={() => {
+          setCurrentPage(number);
+          window.scrollTo(0, 0);
+        }}
       >
         {number}
       </button>
@@ -187,9 +199,9 @@ const MainPage = () => {
       <h1 className="text-xl flex lg:ml-[138px] text-white font-bold mb-6">
         Latest Updates !
       </h1>
-      <h1 className="text-sm flex lg:ml-[138px] text-white font-bold mb-6 absolute top-[45%]  right-0 transform translate-x-[-50%] translate-y-[50%]">
-         {movies.length}
-      </h1>
+      <h1 className="hidden lg:block text-sm  lg:ml-[138px] text-white font-bold mb-6 absolute top-[45%] right-0 transform translate-x-[-50%] translate-y-[50%]">
+    {movies.length}
+</h1>
 
       <div className="flex flex-wrap  lg:justify-center h-[100%] gap-6">
         {content}
@@ -199,7 +211,10 @@ const MainPage = () => {
           className={`text-[#888888] hover:text-white ${
             currentPage === 1 ? "hidden" : ""
           }`}
-          onClick={() => setCurrentPage(currentPage - 1)}
+          onClick={() => {
+            setCurrentPage(currentPage - 1);
+            window.scrollTo(0, 0);
+          }}
           disabled={currentPage === 1}
         >
           Previous
@@ -216,7 +231,10 @@ const MainPage = () => {
               ? "hidden"
               : ""
           }`}
-          onClick={() => setCurrentPage(currentPage + 1)}
+          onClick={() => {
+            setCurrentPage(currentPage + 1);
+            window.scrollTo(0, 0);
+          }}
           disabled={
             currentPage ===
             Math.ceil(
@@ -233,4 +251,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default MainPage
