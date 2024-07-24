@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchMovies, fetchMoviesByGenre } from "../store/movieSlice";
 import { Helmet } from "react-helmet";
-import { telegramRequestGroup } from "../constant";
+import { backendApi, telegramRequestGroup } from "../constant";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -13,20 +13,36 @@ const MainPage = () => {
   const error = useSelector((state) => state.movies.error);
   const genre = useSelector((state) => state.movies.genre);
   const searchStatus = useSelector((state) => state.movies.searchStatus);
+  const [deletestate, setDeleteState] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 10;
 
   useEffect(() => {
-    if (movieStatus === "idle") {
+    if (movieStatus === "idle" || deletestate) {
       if (genre) {
         dispatch(fetchMoviesByGenre(genre));
       } else {
         dispatch(fetchMovies());
       }
+      setDeleteState(false);
     }
-  }, [movieStatus, dispatch, genre]);
+  }, [movieStatus, dispatch, genre, deletestate]);
+
+  const handleDelete = (id) => {
+    fetch(`${backendApi}${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        response.json()
+        dispatch(fetchMovies());
+      })
+      .then(() => {
+        setDeleteState(true);
+      })
+      .catch((error) => console.error("Error deleting movie:", error));
+  };
 
   let content;
 
@@ -38,7 +54,7 @@ const MainPage = () => {
     >
       <div className="shimmer w-[120px] lg:w-[200px] lg:h-[300px] h-[200px] rounded-lg mb-4"></div>
       <div className="flex flex-col">
-        <div className="shimmer w-[200px]  ml-4 lg:w-[150px] h-5 rounded"></div>
+        <div className="shimmer w-[200px] ml-4 lg:w-[150px] h-5 rounded"></div>
         <div className="shimmer w-[200px] mt-3 ml-4 lg:w-[150px] h-5 rounded"></div>
         <div className="shimmer w-[80px] mt-3 ml-4 lg:w-[150px] h-5 rounded"></div>
       </div>
@@ -61,13 +77,11 @@ const MainPage = () => {
     );
   } else if (searchResults.length === 0 && movies.length === 0) {
     content = (
-      <div className="h-[100vh] flex-col items-center justify-center  ">
-        <p className="text-white"> Movie not available 😔</p>
+      <div className="h-[100vh] flex-col items-center justify-center">
+        <p className="text-white">Movie not available 😔</p>
         <p className="text-white mt-5">
-          {" "}
           📌If Movie not available then Request in our Telegram Group{" "}
-          <a className=" text-blue-500 font-bold  " href={telegramRequestGroup}>
-            {" "}
+          <a className="text-blue-500 font-bold" href={telegramRequestGroup}>
             HERE
           </a>
         </p>
@@ -75,18 +89,26 @@ const MainPage = () => {
     );
   } else if (currentMovies.length > 0) {
     content = currentMovies.map((movie) => (
-      <Link key={movie._id} to={`/movie/${movie._id}`} className="no-underline">
-        <div className="flex lg:w-56 lg:p-4 rounded-lg lg:items-center lg:justify-center lg:flex-col">
-          <img
-            src={movie.imageUrl}
-            alt={movie.title}
-            className="w-[120px] lg:w-[200px] rounded-lg mb-4"
-          />
-          <h3 className="text-[17px] ml-5 text-white font-semibold">
-            {movie.title}
-          </h3>
-        </div>
-      </Link>
+      <div key={movie._id} className="flex flex-col">
+        <Link to={`/movie/${movie._id}`} className="no-underline">
+          <div className="flex lg:w-56 lg:p-4 rounded-lg lg:items-center lg:justify-center lg:flex-col">
+            <img
+              src={movie.imageUrl}
+              alt={movie.title}
+              className="w-[120px] lg:w-[200px] rounded-lg mb-4"
+            />
+            <h3 className="text-[17px] ml-5 text-white font-semibold">
+              {movie.title}
+            </h3>
+          </div>
+        </Link>
+        <button
+          onClick={() => handleDelete(movie._id)}
+          className="text-red-500 text-2xl mt-2"
+        >
+          Delete
+        </button>
+      </div>
     ));
   } else if (movieStatus === "succeeded" && movies.length === 0) {
     content = (
@@ -197,13 +219,13 @@ const MainPage = () => {
       </Helmet>
 
       <h1 className="text-xl flex lg:ml-[138px] text-white font-bold mb-6">
-        Latest Updates !
+        Latest Updates!
       </h1>
-      <h1 className="hidden lg:block text-sm  lg:ml-[138px] text-white font-bold mb-6 absolute top-[45%] right-0 transform translate-x-[-50%] translate-y-[50%]">
-    {movies.length}
-</h1>
+      <h1 className="hidden lg:block text-sm lg:ml-[138px] text-white font-bold mb-6 absolute top-[45%] right-0 transform translate-x-[-50%] translate-y-[50%]">
+        {movies.length}
+      </h1>
 
-      <div className="flex flex-wrap  lg:justify-center h-[100%] gap-6">
+      <div className="flex flex-wrap lg:justify-center h-[100%] gap-6">
         {content}
       </div>
       <div className="flex justify-center mt-4">
@@ -251,4 +273,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage
+export default MainPage;

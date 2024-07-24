@@ -6,19 +6,11 @@ import MovieForm from "./Components/MovieForm";
 import Header from "./Components/Header";
 import Logo from "./Components/Logo";
 import Footer from "./Components/Footer";
-import NavBar from "./Components/Navbar";
-import VideoPlayer from "./Components/VideoPlayer";
-import DMCAPolicy from "./Components/Navbar Compnents/DMCAPolicy ";
-import DisclaimerPolicy from "./Components/Navbar Compnents/DisclaimerPolicy";
-import ContactForm from "./Components/Navbar Compnents/ContactForm";
-import ScrollToTop from "./Components/hook/useScrollToTop";
- 
+
 
 const AppLayout = () => {
   return (
     <div>
-      <ScrollToTop   /> 
-      <NavBar/>
       <Logo />
       <Header />
       <Outlet />
@@ -41,20 +33,8 @@ const router = createBrowserRouter([
         element: <MovieDetail />,
       },
       {
-        path: "how-to-download",
-        element: <VideoPlayer />
-      },
-      {
-        path: "dmca-policy",
-        element: <DMCAPolicy />
-      },
-      {
-        path:"declaimer",
-        element:<DisclaimerPolicy />
-      },
-      {
-        path:"contact",
-        element:<ContactForm />
+        path: "admin",
+        element: <MovieForm />,
       },
     ],
   },

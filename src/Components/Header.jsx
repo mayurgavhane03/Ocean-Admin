@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LuSearch } from "react-icons/lu";
-import { fetchMoviesByGenre, fetchMoviesByType, setGenre } from "../store/movieSlice";
+import {
+  fetchMoviesByGenre,
+  fetchMoviesByType,
+  setGenre,
+} from "../store/movieSlice";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import Search from "./Search";
 
@@ -19,13 +23,16 @@ const DropdownMenu = ({ label, items, onItemClick, isOpen, onToggle }) => {
           onClick={() => onToggle(!isOpen)}
           className="peer text-gray-300 hover:bg-[#282828] hover:text-white px-3 py-3 rounded-md text-sm font-medium flex items-center"
         >
-          {label} <FaChevronDown className={`ml-2 transform ${isOpen ? 'rotate-180' : 'rotate-0'}`} />
+          {label}{" "}
+          <FaChevronDown
+            className={`ml-2 transform ${isOpen ? "rotate-180" : "rotate-0"}`}
+          />
         </button>
       </div>
       {isOpen && (
         <div
           className="absolute sm:mt-2 w-48 rounded-md shadow-lg bg-[#282828] ring-1 ring-black ring-opacity-5 z-10 transition-transform duration-300 ease-in-out"
-          style={{ top: '4%', right: 'auto', left: '40%' }}
+          style={{ top: "4%", right: "auto", left: "40%" }}
           onMouseLeave={() => onToggle(false)}
         >
           <div
@@ -163,30 +170,13 @@ const Header = () => {
             </button>
           </div>
 
+          <Link to={`/admin`}>
+            <h1>Upload Movie</h1>
+          </Link>
+
           <div className="hidden lg:flex lg:items-center lg:ml-6">
-            <div className="flex space-x-4">
-              <NavLinks onGenreClick={handleGenreClick} />
-              <DropdownMenu
-                label="Hollywood"
-                items={[
-                  "Action",
-                  "Adventure",
-                  "Drama",
-                  "Comedy",
-                  "Fantasy",
-                  "History",
-                  "Horror",
-                  "Thriller",
-                  "Mystery",
-                  "Romance",
-                ]}
-                isOpen={activeDropdown === "hollywood"}
-                onToggle={(isOpen) => handleDropdownToggle(isOpen ? "hollywood" : null)}
-                onItemClick={handleGenreClick}
-              />
-              <div className="relative search-container hidden lg:block">
-                <Search />
-              </div>
+            <div className="relative search-container hidden lg:block">
+              <Search />
             </div>
           </div>
         </div>
@@ -197,34 +187,35 @@ const Header = () => {
         } transition-transform duration-300 ease-in-out`}
       >
         <div className="relative px-2 pt-2 pb-3 space-y-1 flex flex-col items-start">
-  <button
-    onClick={toggleMenu}
-    className="absolute top-0 right-0 text-gray-400 hover:text-white focus:outline-none"
-    style={{ margin: '0.5rem' }}  // Add margin for better spacing
-  >
-    <FaTimes />
-  </button>
-  <NavLinks onGenreClick={handleGenreClick} />
-  <DropdownMenu
-    label="Hollywood"
-    items={[
-      "Action",
-      "Adventure",
-      "Drama",
-      "Comedy",
-      "Fantasy",
-      "History",
-      "Horror",
-      "Thriller",
-      "Mystery",
-      "Romance",
-    ]}
-    isOpen={activeDropdown === "hollywood"}
-    onToggle={(isOpen) => handleDropdownToggle(isOpen ? "hollywood" : null)}
-    onItemClick={handleGenreClick}
-  />
-</div>
-
+          <button
+            onClick={toggleMenu}
+            className="absolute top-0 right-0 text-gray-400 hover:text-white focus:outline-none"
+            style={{ margin: "0.5rem" }} // Add margin for better spacing
+          >
+            <FaTimes />
+          </button>
+          <NavLinks onGenreClick={handleGenreClick} />
+          <DropdownMenu
+            label="Hollywood"
+            items={[
+              "Action",
+              "Adventure",
+              "Drama",
+              "Comedy",
+              "Fantasy",
+              "History",
+              "Horror",
+              "Thriller",
+              "Mystery",
+              "Romance",
+            ]}
+            isOpen={activeDropdown === "hollywood"}
+            onToggle={(isOpen) =>
+              handleDropdownToggle(isOpen ? "hollywood" : null)
+            }
+            onItemClick={handleGenreClick}
+          />
+        </div>
       </div>
       {isSearchOpen && (
         <div className="flex justify-center items-center top-16 w-full z-50">

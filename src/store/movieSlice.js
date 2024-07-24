@@ -50,6 +50,22 @@ export const fetchMoviesByType = createAsyncThunk('movies/fetchMoviesByType', as
   const data = decryptData(encryptedData.data);
   return sortMoviesByDate(data);
 });
+export const updateMovieById = createAsyncThunk(
+  'movies/updateMovieById',
+  async ({ id, ...updateData }) => {
+    const response = await fetch(`${backendApi}${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateData),
+    });
+
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
 
 const moviesSlice = createSlice({
   name: 'movies',
@@ -150,6 +166,18 @@ const moviesSlice = createSlice({
       .addCase(fetchMoviesByType.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      .addCase(updateMovieById.pending, (state) => {
+        state.movieDetailsStatus = 'loading';
+      })
+      .addCase(updateMovieById.fulfilled, (state, action) => {
+        state.movieDetailsStatus = 'succeeded';
+        state.movieDetails = action.payload;
+        state.items = state.items.map(movie => movie._id === action.payload._id ? action.payload : movie);
+      })
+      .addCase(updateMovieById.rejected, (state, action) => {
+        state.movieDetailsStatus = 'failed';
+        state.movieDetailsError = action.error.message;
       });
   },
 });
