@@ -204,7 +204,8 @@ const MainPage = () => {
         onClick={() => {
           setCurrentPage(number);
           window.scrollTo(0, 0);
-        }}
+        }}  
+        
       >
         {number}
       </button>
